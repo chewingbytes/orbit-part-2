@@ -1,14 +1,35 @@
+const path = require('path');
 var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
 const PORT = process.env.PORT || 5050;
-var startPage = "index.html";
+var homepage = "index.html";
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(express.static("./public"));
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/public/" + startPage);
+app.use(express.static(path.join(__dirname, 'public')));  // Serve static files from the 'public' directory
+
+
+// Import the user-related functions
+const { addUser, loginUser } = require("./utils/UserUtils");
+
+app.get("/login", (req, res) => {
+  res.sendFile(__dirname + "login.html");
 });
+
+app.get("/signup", (req, res) => {
+  res.sendFile(__dirname + "signup.html");
+});
+
+app.get("/", (req, res) => {
+  res.sendFile(__dirname + homepage);
+});
+
+app.post("/signup", addUser);
+
+// POST route for user login
+app.post("/login", loginUser);
+
+// Start the server
 server = app.listen(PORT, function () {
   const address = server.address();
   const baseUrl = `http://${
@@ -16,4 +37,5 @@ server = app.listen(PORT, function () {
   }:${address.port}`;
   console.log(`Demo project at: ${baseUrl}`);
 });
+
 module.exports = { app, server };
