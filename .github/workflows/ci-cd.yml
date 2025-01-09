@@ -79,6 +79,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+        # Step 4: Instrument frontend code
+      - name: Instrument Frontend Code
+        run: npm run frontend-instrument
+
       - name: Run Frontend Tests
         run: npm run frontend-test
 
