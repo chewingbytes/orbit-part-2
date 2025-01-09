@@ -36,12 +36,13 @@ jobs:
       - name: Set up kubectl
         uses: azure/setup-kubectl@v1
         with:
-          version: "v1.21.0"
+          version: 'v1.21.0'
+
+      - name: Create .kube directory
+        run: mkdir -p $HOME/.kube
 
       - name: Set up Kubeconfig
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
+        run: echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
 
       - name: Deploy to Kubernetes
         run: |
