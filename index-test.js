@@ -7,8 +7,6 @@ var homepage = "index.html";
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use("/", express.static(path.join(__dirname, "instrumented")));
-app.use(express.static(path.join(__dirname, 'public')));  // Serve static files from the 'public' directory
-
 
 // Import the user-related functions
 const { addUser, loginUser } = require("./utils/UserUtils");
@@ -22,7 +20,7 @@ app.get("/signup", (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + homepage);
+  res.sendFile(__dirname + "/instrumented/" + homepage);
 });
 
 app.post("/signup", addUser);

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home Screen - Orbit Part 2</title>
+</head>
+<body>
+  <h2>Welcome to Orbit Part 2</h2>
+  <p id="user-welcome">Loading user info...</p>
+  <button onclick="logout()">Logout</button>
+
+  <script>
+    // Get the user's name from local storage
+    window.onload = function () {
+      const token = localStorage.getItem('token');
+      if (token) {
+        // You should validate the token and fetch the user's data from the server in a real app
+        const userName = localStorage.getItem('userName');
+        if (userName) {
+          document.getElementById('user-welcome').innerText = `Welcome, ${userName}!`;
+        }
+      } else {
+        window.location.href = '/login.html'; // Redirect to login if no token found
+      }
+    };
+
+    // Logout function
+    function logout() {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userName');
+      window.location.href = '/login.html'; // Redirect to login after logout
+    }
+  </script>
+</body>
+</html>
