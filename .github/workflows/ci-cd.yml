@@ -29,7 +29,6 @@ jobs:
           push: true
           tags: bryan19191919191919/orbit:latest
 
-
   test:
     runs-on: ubuntu-latest
     needs: build
@@ -47,6 +46,17 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Build Docker image locally
+        run: docker build -t orbit:latest .
+
+      - name: Run application in background
+        run: |
+          docker run -d -p 3000:3000 orbit:latest
+
+      - name: Wait for the app to be up and running
+        run: |
+          sleep 10  # Adjust the sleep time as needed to wait for the app to fully start
 
       - name: Run backend tests with NYC
         run: npm run backend-test
