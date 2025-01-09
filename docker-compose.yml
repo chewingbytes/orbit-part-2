@@ -1,0 +1,9 @@
+services:
+  build-rms:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: bryan19191919191919/orbit:latest
+    container_name: orbit
+    ports:
+      - "8000:5050"
