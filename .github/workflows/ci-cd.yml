@@ -30,29 +30,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 16  # Specify the Node.js version
 
-      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Run backend tests with Mocha
       - name: Run Backend Tests
         run: npm run backend-test
 
-      # Step 5: Ensure .nyc_output exists
       - name: Check Backend Coverage Directory
         run: ls .nyc_output || echo "Directory not found"
 
-      # Step 6: Upload backend coverage report
       - name: Upload Backend Coverage Report
         if: success()
         uses: actions/upload-artifact@v3
@@ -65,39 +59,32 @@ jobs:
     needs: backend-tests
 
     steps:
-      # Step 1: Check out the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 16  # Specify the Node.js version
 
-      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
-        # Step 4: Instrument frontend code
       - name: Instrument Frontend Code
         run: npm run frontend-instrument
 
       - name: Run Frontend Tests
         run: npm run frontend-test
 
-      # Step 6: Ensure .nyc_output exists
       - name: Check Frontend Coverage Directory
         run: ls .nyc_output || echo "Directory not found"
 
-      # Step 7: Upload frontend coverage report
       - name: Upload Frontend Coverage Report
         if: success()
         uses: actions/upload-artifact@v3
         with:
           name: frontend-coverage-report
           path: .nyc_output/  # Ensure this path matches where nyc output is stored
-
 
   deploy:
     runs-on: ubuntu-latest
@@ -106,20 +93,35 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: List files
-        run: ls -R
-
       - name: Set up kubectl
-        uses: azure/setup-kubectl@v1
-        with:
-          version: 'v1.21.0'
-
-      - name: Create .kube directory
-        run: mkdir -p $HOME/.kube
-
-      - name: Set up Kubeconfig
-        run: echo "${{ secrets.KUBECONFIG }}" > $HOME/.kube/config
-
-      - name: Deploy to Kubernetes
         run: |
-          kubectl apply -f k8s/deployment.yaml
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > ~/.kube/config
+          if [ ! -s ~/.kube/config ]; then
+            echo "Decoded kubeconfig is empty or invalid!" >&2
+            exit 1
+          fi
+          kubectl config view  # Ensure kubeconfig is valid
+          kubectl version --client
+          kubectl cluster-info
+
+      - name: Check manifest files
+        run: |
+          if [ ! -f rms-service.yaml ] || [ ! -f rms-deployment.yaml ]; then
+            echo "Required Kubernetes manifest files are missing!" >&2
+            exit 1
+          fi
+
+      - name: Deploy Kubernetes resources
+        run: |
+          kubectl apply -f rms-service.yaml
+          sleep 5 && kubectl apply -f rms-service.yaml
+          kubectl apply -f rms-deployment.yaml
+          sleep 5 && kubectl apply -f rms-deployment.yaml
+
+      - name: Verify Deployment
+        run: |
+          kubectl rollout status deployment/rms-deployment
+          kubectl get all
+          kubectl describe deployment rms-deployment  # Debugging: View deployment details
+          kubectl logs -l app=rms-docker-img          # Debugging: View logs for the application
