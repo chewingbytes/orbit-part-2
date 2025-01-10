@@ -107,21 +107,21 @@ jobs:
 
       - name: Check manifest files
         run: |
-          if [ ! -f rms-service.yaml ] || [ ! -f rms-deployment.yaml ]; then
+          if [ ! -f service.yaml ] || [ ! -f deployment.yaml ]; then
             echo "Required Kubernetes manifest files are missing!" >&2
             exit 1
           fi
 
       - name: Deploy Kubernetes resources
         run: |
-          kubectl apply -f rms-service.yaml
-          sleep 5 && kubectl apply -f rms-service.yaml
-          kubectl apply -f rms-deployment.yaml
-          sleep 5 && kubectl apply -f rms-deployment.yaml
+          kubectl apply -f service.yaml
+          sleep 5 && kubectl apply -f service.yaml
+          kubectl apply -f deployment.yaml
+          sleep 5 && kubectl apply -f deployment.yaml
 
       - name: Verify Deployment
         run: |
-          kubectl rollout status deployment/rms-deployment
+          kubectl rollout status deployment/deployment
           kubectl get all
-          kubectl describe deployment rms-deployment  # Debugging: View deployment details
-          kubectl logs -l app=rms-docker-img          # Debugging: View logs for the application
+          kubectl describe deployment deployment  # Debugging: View deployment details
+          kubectl logs -l app=docker-img          # Debugging: View logs for the application
