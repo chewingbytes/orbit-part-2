@@ -12,8 +12,6 @@ describe("Auth Frontend", () => {
 });
 
 describe('Login Page', () => {
-  const baseUrl = 'http://localhost:8000/login.html';
-
   it('should display the login form', () => {
     cy.visit(baseUrl);
     cy.get('h2').should('have.text', 'Login');
@@ -27,13 +25,13 @@ describe('Login Page', () => {
     cy.get('button[type="submit"]').click();
 
     // Assume successful login redirects to a dashboard page
-    cy.url().should('eq', 'http://localhost:8000/index.html');
+    cy.url().should('eq', 'http://localhost:5050/index.html');
   });
 
   it('should navigate to signup page when clicking signup link', () => {
     cy.visit(baseUrl);
     cy.get('a[href="./signup.html"]').click();
-    cy.url().should('eq', 'http://localhost:8000/signup.html');
+    cy.url().should('eq', 'http://localhost:5050/signup.html');
   });
 
   it('should display an error for invalid login credentials', () => {
@@ -42,7 +40,7 @@ describe('Login Page', () => {
       body: { message: 'Invalid credentials.' },
     });
   
-    cy.visit('http://localhost:8000/login.html');
+    cy.visit('http://localhost:5050/login.html');
     cy.get('#email').type('invalid@example.com');
     cy.get('#password').type('wrongpassword');
     cy.get('button[type="submit"]').click();
@@ -52,13 +50,13 @@ describe('Login Page', () => {
 
   it('should store "Guest" as the username when userName is missing in response', () => {
     // Intercept the login POST request to simulate a response without userName
-    cy.intercept('POST', 'http://localhost:8000/login', {
+    cy.intercept('POST', 'http://localhost:5050/login', {
       statusCode: 200,
       body: { token: 'fake-token' }, // No userName provided
     });
   
     // Visit the login page
-    cy.visit('http://localhost:8000/login.html');
+    cy.visit('http://localhost:5050/login.html');
   
     // Fill out the form with valid credentials
     cy.get('#email').type('testuser@example.com');
@@ -78,13 +76,13 @@ describe('Login Page', () => {
     });
   
     // Ensure the user is redirected to the homepage
-    cy.url().should('eq', 'http://localhost:8000/index.html');
+    cy.url().should('eq', 'http://localhost:5050/index.html');
   });
 
   it('should display a generic error message for network issues', () => {
     cy.intercept('POST', '/login', { forceNetworkError: true });
   
-    cy.visit('http://localhost:8000/login.html');
+    cy.visit('http://localhost:5050/login.html');
     cy.get('#email').type('testuser@example.com');
     cy.get('#password').type('password123');
     cy.get('button[type="submit"]').click();
@@ -101,27 +99,27 @@ describe('Homescreen Access', () => {
 
   it('should display homescreen for logged-in user', () => {
     // Set the token in localStorage to simulate a logged-in user
-    cy.visit('http://localhost:8000/login.html'); // Ensure the page is loaded
+    cy.visit('http://localhost:5050/login.html'); // Ensure the page is loaded
     cy.window().then((window) => {
       window.localStorage.setItem('token', fakeToken);
       window.localStorage.setItem('userName', 'Test User'); // Optional: Store username
     });
 
-    cy.visit('http://localhost:8000/index.html');
+    cy.visit('http://localhost:5050/index.html');
 
     cy.get('h2').should('have.text', 'Welcome to Orbit Part 2');
     cy.get('#user-welcome').should('have.text', 'Welcome, Test User!');
   });
 
   it('should not show homescreen for users not logged in and redirect to loginform', () => {
-    cy.visit('http://localhost:8000/index.html'); // Ensure the page is loaded
+    cy.visit('http://localhost:5050/index.html'); // Ensure the page is loaded
 
-    cy.url().should('eq', 'http://localhost:8000/login.html');
+    cy.url().should('eq', 'http://localhost:5050/login.html');
   });
 });
 
 describe('Signup Page', () => {
-  const baseUrl = 'http://localhost:8000/signup.html';
+  const baseUrl = 'http://localhost:5050/signup.html';
 
   it('should display the signup form', () => {
     cy.visit(baseUrl);
@@ -136,7 +134,7 @@ describe('Signup Page', () => {
     cy.get('#password').type('password123');
     cy.get('button[type="submit"]').click();
 
-    cy.url().should('eq', 'http://localhost:8000/login.html');
+    cy.url().should('eq', 'http://localhost:5050/login.html');
   });
 
   it('should display an error for duplicate email', () => {
@@ -145,7 +143,7 @@ describe('Signup Page', () => {
       body: { message: 'Invalid signup credentials.' },
     });
   
-    cy.visit('http://localhost:8000/signup.html');
+    cy.visit('http://localhost:5050/signup.html');
     cy.get('#name').type('alicegreen');
     cy.get('#email').type('alice.greene@example.com');
     cy.get('#password').type('password123');
@@ -157,7 +155,7 @@ describe('Signup Page', () => {
   it('should display a generic error message for network issues', () => {
     cy.intercept('POST', '/signup', { forceNetworkError: true });
   
-    cy.visit('http://localhost:8000/signup.html');
+    cy.visit('http://localhost:5050/signup.html');
     cy.get('#name').type('test');
     cy.get('#email').type('testuser@example.com');
     cy.get('#password').type('password123');
