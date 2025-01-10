@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: rms-deployment
+  name: my-app
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
-      app: rms-docker-img
+      app: my-app
   template:
     metadata:
       labels:
-        app: rms-docker-img
+        app: my-app
     spec:
       containers:
-        - name: rms-container
-          image: orbit/rms-docker-img:latest
-          ports:
-            - containerPort: 5050
+      - name: my-app
+        image: bryan19191919191919/orbit:latest
+        ports:
+        - containerPort: 3000
