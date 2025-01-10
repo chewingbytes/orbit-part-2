@@ -125,7 +125,9 @@ jobs:
 
       - name: Check API Server Access
         run: curl -v https://rmsaksclus-rmsresourcegroup-44b950-pe5buib0.hcp.centralus.azmk8s.io
-      
+
+      - name: Test DNS Resolution
+        run: nslookup rmsaksclus-rmsresourcegroup-44b950-pe5buib0.hcp.centralus.azmk8s.io
 
       - name: Deploy to Kubernetes
         run: |
