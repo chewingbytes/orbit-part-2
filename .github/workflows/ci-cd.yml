@@ -118,10 +118,3 @@ jobs:
           sleep 5 && kubectl apply -f service.yaml
           kubectl apply -f deployment.yaml
           sleep 5 && kubectl apply -f deployment.yaml
-
-      - name: Verify Deployment
-        run: |
-          kubectl rollout status deployment/deployment
-          kubectl get all
-          kubectl describe deployment deployment  # Debugging: View deployment details
-          kubectl logs -l app=docker-img          # Debugging: View logs for the application
