@@ -123,6 +123,10 @@ jobs:
       - name: Print Kubeconfig
         run: cat $HOME/.kube/config
 
+      - name: Check API Server Access
+        run: curl -v https://rmsaksclus-rmsresourcegroup-44b950-pe5buib0.hcp.centralus.azmk8s.io
+      
+
       - name: Deploy to Kubernetes
         run: |
           kubectl apply -f k8s/deployment.yaml
