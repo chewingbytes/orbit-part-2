@@ -28,7 +28,6 @@ jobs:
 
   backend-tests:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -54,10 +53,35 @@ jobs:
           name: backend-coverage-report
           path: .nyc_output/  # Ensure this path matches where nyc output is stored
 
+      - name: Send email on backend test success
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.EMAIL }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "Backend Tests Succeeded"
+          body: "The backend tests have completed successfully."
+          to: ${{ secrets.RECIPIENT_EMAIL }}
+          from: ${{ secrets.EMAIL }}
+
+      - name: Send email on backend test failure
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.EMAIL }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "Backend Tests Failed"
+          body: "The backend tests have failed."
+          to: ${{ secrets.RECIPIENT_EMAIL }}
+          from: ${{ secrets.EMAIL }}
+
   frontend-tests:
     runs-on: ubuntu-latest
     needs: backend-tests
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -85,6 +109,32 @@ jobs:
         with:
           name: frontend-coverage-report
           path: .nyc_output/  # Ensure this path matches where nyc output is stored
+
+      - name: Send email on frontend test success
+        if: success()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.EMAIL }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "Frontend Tests Succeeded"
+          body: "The frontend tests have completed successfully."
+          to: ${{ secrets.RECIPIENT_EMAIL }}
+          from: ${{ secrets.EMAIL }}
+
+      - name: Send email on frontend test failure
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_SERVER }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.EMAIL }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "Frontend Tests Failed"
+          body: "The frontend tests have failed."
+          to: ${{ secrets.RECIPIENT_EMAIL }}
+          from: ${{ secrets.EMAIL }}
 
   deploy:
     runs-on: ubuntu-latest
