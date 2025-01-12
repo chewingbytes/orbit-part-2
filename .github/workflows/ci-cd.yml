@@ -40,6 +40,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Create Backend Coverage Directory
+        run: mkdir -p .nyc_output
+
       - name: Run Backend Tests
         run: npm run backend-test
 
@@ -93,6 +96,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Create Frontend Coverage Directory
+        run: mkdir -p .nyc_output
 
       - name: Instrument Frontend Code
         run: npm run frontend-instrument
@@ -174,4 +180,4 @@ jobs:
           kubectl rollout status deployment/my-app
           kubectl get all
           kubectl describe deployment my-app  # Debugging: View deployment details
-          kubectl logs -l app=my-app-img          # Debugging: View logs for the application
+          kubectl logs -l app=my-app-img      # Debugging: View logs for the application
