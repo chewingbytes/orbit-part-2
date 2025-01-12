@@ -41,13 +41,15 @@ jobs:
         run: npm install
 
       - name: Create Backend Coverage Directory
-        run: mkdir -p .nyc_output
+        run: |
+          mkdir -p .nyc_output
+          ls -alh .nyc_output  # Verify the directory exists
 
       - name: Run Backend Tests
         run: npm run backend-test
 
       - name: Check Backend Coverage Directory
-        run: ls .nyc_output || echo "Directory not found"
+        run: ls -alh .nyc_output || echo "Directory not found"
 
       - name: Upload Backend Coverage Report
         if: success()
@@ -98,7 +100,9 @@ jobs:
         run: npm install
 
       - name: Create Frontend Coverage Directory
-        run: mkdir -p .nyc_output
+        run: |
+          mkdir -p .nyc_output
+          ls -alh .nyc_output  # Verify the directory exists
 
       - name: Instrument Frontend Code
         run: npm run frontend-instrument
@@ -107,7 +111,7 @@ jobs:
         run: npm run frontend-test
 
       - name: Check Frontend Coverage Directory
-        run: ls .nyc_output || echo "Directory not found"
+        run: ls -alh .nyc_output || echo "Directory not found"
 
       - name: Upload Frontend Coverage Report
         if: success()
