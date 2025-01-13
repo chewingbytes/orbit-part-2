@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Flight</title>
+    <style>
+      /* Add your styles here */
+      .form-container {
+        width: 80%;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+      }
+      input,
+      button {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      button {
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Create a New Flight</h2>
+    <div class="form-container">
+      <form id="create-flight-form">
+        <label for="flight-number">Flight Number:</label>
+        <input type="text" id="flight-number" required />
+
+        <label for="departure-location">Departure Location:</label>
+        <input type="text" id="departure-location" required />
+
+        <label for="arrival-location">Arrival Location:</label>
+        <input type="text" id="arrival-location" required />
+
+        <label for="departure-time">Departure Time:</label>
+        <input type="datetime-local" id="departure-time" required />
+
+        <label for="arrival-time">Arrival Time:</label>
+        <input type="datetime-local" id="arrival-time" required />
+
+        <label for="duration">Duration (hours):</label>
+        <input type="number" id="duration" required />
+
+        <label for="price">Price:</label>
+        <input type="number" id="price" required />
+
+        <label for="comfort-level">Comfort Level:</label>
+        <input type="text" id="comfort-level" required />
+
+        <button type="submit">Create Flight</button>
+      </form>
+    </div>
+
+    <script>
+      // Handle form submission
+      document.getElementById("create-flight-form").addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const flightData = {
+          flight_number: document.getElementById("flight-number").value,
+          departure_location: document.getElementById("departure-location").value,
+          arrival_location: document.getElementById("arrival-location").value,
+          departure_time: document.getElementById("departure-time").value,
+          arrival_time: document.getElementById("arrival-time").value,
+          duration: document.getElementById("duration").value,
+          price: document.getElementById("price").value,
+          comfort_level: document.getElementById("comfort-level").value,
+        };
+
+        try {
+          const response = await fetch('/api/flights', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(flightData),
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            alert('Flight created successfully!');
+            window.location.href = '/home.html'; // Redirect to the home page
+          } else {
+            alert(`Error: ${result.message}`);
+          }
+        } catch (error) {
+          console.error('Error creating flight:', error);
+          alert('An error occurred while creating the flight.');
+        }
+      });
+    </script>
+  </body>
+</html>

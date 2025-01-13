@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Flight</title>
+    <style>
+      /* Add your styles here */
+      .form-container {
+        width: 80%;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+      }
+      input,
+      button {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      button {
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>Edit Flight</h2>
+    <div class="form-container">
+      <form id="edit-flight-form">
+        <input type="hidden" id="edit-flight-number" />
+
+        <label for="edit-departure-location">Departure Location:</label>
+        <input type="text" id="edit-departure-location" required />
+
+        <label for="edit-arrival-location">Arrival Location:</label>
+        <input type="text" id="edit-arrival-location" required />
+
+        <label for="edit-departure-time">Departure Time:</label>
+        <input type="datetime-local" id="edit-departure-time" required />
+
+        <label for="edit-arrival-time">Arrival Time:</label>
+        <input type="datetime-local" id="edit-arrival-time" required />
+
+        <label for="edit-duration">Duration (hours):</label>
+        <input type="number" id="edit-duration" required />
+
+        <label for="edit-price">Price:</label>
+        <input type="number" id="edit-price" required />
+
+        <label for="edit-comfort-level">Comfort Level:</label>
+        <input type="text" id="edit-comfort-level" required />
+
+        <button type="submit">Update Flight</button>
+        <button type="button" onclick="window.location.href='/home.html'">Cancel</button>
+      </form>
+    </div>
+
+    <script>
+      // Fetch flight details based on the flight number
+      const flightNumber = new URLSearchParams(window.location.search).get('flight_number');
+
+      async function fetchFlightDetails() {
+        try {
+          const response = await fetch(`/api/flights/${flightNumber}`);
+          const flight = await response.json();
+
+          if (response.ok) {
+            document.getElementById("edit-flight-number").value = flight.flight_number;
+            document.getElementById("edit-departure-location").value = flight.departure_location;
+            document.getElementById("edit-arrival-location").value = flight.arrival_location;
+            document.getElementById("edit-departure-time").value = new Date(flight.departure_time).toISOString().slice(0, 16);
+            document.getElementById("edit-arrival-time").value = new Date(flight.arrival_time).toISOString().slice(0, 16);
+            document.getElementById("edit-duration").value = flight.duration;
+            document.getElementById("edit-price").value = flight.price;
+            document.getElementById("edit-comfort-level").value = flight.comfort_level;
+          } else {
+            alert('Flight not found');
+          }
+        } catch (error) {
+          console.error('Error fetching flight details:', error);
+          alert('An error occurred while fetching flight details.');
+        }
+      }
+
+      // Handle form submission for updating flight
+      document.getElementById("edit-flight-form").addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const flightData = {
+          flight_number: document.getElementById("edit-flight-number").value,
+          departure_location: document.getElementById("edit-departure-location").value,
+          arrival_location: document.getElementById("edit-arrival-location").value,
+          departure_time: document.getElementById("edit-departure-time").value,
+          arrival_time: document.getElementById("edit-arrival-time").value,
+          duration: document.getElementById("edit-duration").value,
+          price: document.getElementById("edit-price").value,
+          comfort_level: document.getElementById("edit-comfort-level").value,
+        };
+
+        try {
+          const response = await fetch(`/api/flights/${flightNumber}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(flightData),
+          });
+
+          const result = await response.json();
+          if (response.ok) {
+            alert('Flight updated successfully!');
+            window.location.href = '/home.html'; // Redirect to home after update
+          } else {
+            alert(`Error: ${result.message}`);
+          }
+        } catch (error) {
+          console.error('Error updating flight:', error);
+          alert('An error occurred while updating the flight.');
+        }
+      });
+
+      // Call the fetchFlightDetails on page load
+      window.onload = fetchFlightDetails;
+    </script>
+  </body>
+</html>
