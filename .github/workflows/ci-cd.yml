@@ -180,4 +180,4 @@ jobs:
           kubectl rollout status deployment/my-app
           kubectl get all
           kubectl describe deployment my-app  # Debugging: View deployment details
-          kubectl logs -l app=my-app-img      # Debugging: View logs for the application
+          kubectl logs -l app=my-app     # Debugging: View logs for the application

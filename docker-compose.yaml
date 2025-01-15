@@ -1,5 +1,5 @@
 services:
-  build-rms:
+  my-app:
     build:
       context: .
       dockerfile: Dockerfile
