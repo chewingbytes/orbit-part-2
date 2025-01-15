@@ -23,8 +23,8 @@ jobs:
 
       - name: Build and Push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/orbit:latest -f Dockerfile .
-          docker push ${{ secrets.DOCKER_USERNAME }}/orbit:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/orbit:abc12345 -f Dockerfile .
+          docker push ${{ secrets.DOCKER_USERNAME }}/orbit:abc12345
 
   backend-tests:
     runs-on: ubuntu-latest

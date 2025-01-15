@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: my-app
-        image: bryan19191919191919/orbit:latest
+        image: bryan19191919191919/orbit:abc12345
         ports:
         - containerPort: 5050
