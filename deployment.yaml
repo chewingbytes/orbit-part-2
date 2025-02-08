@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: orbit
+  name: my-app
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: orbit
+      app: my-app
   template:
     metadata:
       labels:
-        app: orbit
+        app: my-app
     spec:
       containers:
-      - name: orbit
+      - name: my-app
         image: bryan19191919191919/orbit:abc12345
         ports:
         - containerPort: 5050
