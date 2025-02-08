@@ -7,7 +7,7 @@ spec:
   selector:
     matchLabels:
       app: rms-docker-img
-  temrms-docker-img
+  template:
     metadata:
       labels:
         app: rms-docker-img
