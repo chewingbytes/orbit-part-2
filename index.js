@@ -10,11 +10,7 @@ app.use(bodyParser.json());
 app.use("/", express.static(path.join(__dirname, "instrumented")));
 app.use(express.static(path.join(__dirname, 'public')));  // Serve static files from the 'public' directory
 
-const statusMonitor = require("express-status-monitor")({
-  websocket: true,
-  path: '/status'
-});
-
+const statusMonitor = require("express-status-monitor");
 app.use(statusMonitor());
 
 // Import the user-related functions
