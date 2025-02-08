@@ -2,3 +2,4 @@ info: demo project at: http://localhost:5050 {"timestamp":"2025-02-08T06:58:09.3
 error: example or error log {"timestamp":"2025-02-08T06:58:09.352Z"}
 info: demo project at: http://localhost:5050 {"timestamp":"2025-02-08T09:00:06.905Z"}
 error: example or error log {"timestamp":"2025-02-08T09:00:06.911Z"}
+info: Server running on http://localhost:5050 {"timestamp":"2025-02-08T14:49:00.639Z"}

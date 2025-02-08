@@ -1,47 +1,43 @@
-const path = require('path');
-var express = require("express");
-var bodyParser = require("body-parser");
-var app = express();
-const logger = require('./logger');
+const http = require("http");
+const path = require("path");
+const express = require("express");
+const bodyParser = require("body-parser");
+const statusMonitor = require("express-status-monitor");
+
+const app = express();
+const logger = require("./logger");
 const PORT = process.env.PORT || 5050;
-var homepage = "index.html";
+const homepage = "index.html";
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use("/", express.static(path.join(__dirname, "instrumented")));
-app.use(express.static(path.join(__dirname, 'public')));  // Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, "public")));
 
-const statusMonitor = require("express-status-monitor");
-app.use(statusMonitor());
+const monitor = statusMonitor({
+  websocket: true,
+  path: "/status"
+});
 
-// Import the user-related functions
+app.use(monitor);
+
+// Import user-related functions
 const { addUser, loginUser } = require("./utils/UserUtils");
 
-app.get("/login", (req, res) => {
-  res.sendFile(__dirname + "login.html");
-});
-
-app.get("/signup", (req, res) => {
-  res.sendFile(__dirname + "signup.html");
-});
-
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + homepage);
-});
+app.get("/login", (req, res) => res.sendFile(path.join(__dirname, "login.html")));
+app.get("/signup", (req, res) => res.sendFile(path.join(__dirname, "signup.html")));
+app.get("/", (req, res) => res.sendFile(path.join(__dirname, homepage)));
 
 app.post("/signup", addUser);
-
-// POST route for user login
 app.post("/login", loginUser);
 
-// Start the server
-server = app.listen(PORT, function () {
-  const address = server.address();
-  const baseUrl = `http://${
-    address.address == "::" ? "localhost" : address.address
-  }:${address.port}`;
-  console.log(`Demo project at: ${baseUrl}`);
-  logger.info(`demo project at: ${baseUrl}`);
-  logger.error(`example or error log`);
+// Create HTTP server instead of using `app.listen`
+const server = http.createServer(app);
+
+// Start server
+server.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+  logger.info(`Server running on http://localhost:${PORT}`);
 });
 
 module.exports = { app, server };
