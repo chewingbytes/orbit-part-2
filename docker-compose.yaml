@@ -1,5 +1,5 @@
 services:
-  rms-deployment:
+  build-rms:
     build:
       context: .
       dockerfile: Dockerfile
