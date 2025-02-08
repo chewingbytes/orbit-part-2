@@ -12,7 +12,6 @@ app.use(express.static(path.join(__dirname, 'public')));  // Serve static files 
 
 const statusMonitor = require("express-status-monitor");
 app.use(statusMonitor());
-
 // Import the user-related functions
 const { addUser, loginUser } = require("./utils/UserUtils");
 
