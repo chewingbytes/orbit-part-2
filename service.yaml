@@ -7,6 +7,6 @@ spec:
     app: rms-docker-img
   ports:
     - protocol: TCP
-      port: 5050
+      port: 80
       targetPort: 5050
   type: LoadBalancer
