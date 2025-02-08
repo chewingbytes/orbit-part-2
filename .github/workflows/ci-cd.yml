@@ -177,7 +177,7 @@ jobs:
 
       - name: Verify Deployment
         run: |
-          kubectl rollout status deployment/my-app
+          kubectl rollout status deployment/rms-deployment
           kubectl get all
-          kubectl describe deployment my-app  # Debugging: View deployment details
-          kubectl logs -l app=my-app     # Debugging: View logs for the application
+          kubectl describe deployment rms-deployment  # Debugging: View deployment details
+          kubectl logs -l app=rms-docker-img     # Debugging: View logs for the application

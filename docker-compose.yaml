@@ -1,5 +1,5 @@
 services:
-  rms-deployment:
+  my-app:
     build:
       context: .
       dockerfile: Dockerfile
