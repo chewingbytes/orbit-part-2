@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: bryan19191919191919/orbit:abc123456
+    image: bryan19191919191919/orbit:abc12345
     container_name: orbit
     ports:
       - "8000:5050"
