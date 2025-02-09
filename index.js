@@ -8,11 +8,11 @@ var homepage = "index.html";
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use("/", express.static(path.join(__dirname, "instrumented")));
-app.use(express.static(path.join(__dirname, 'public')));  // Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));  
 
 const statusMonitor = require("express-status-monitor");
 app.use(statusMonitor());
-// Import the user-related functions
+
 const { addUser, loginUser } = require("./utils/UserUtils");
 
 app.get("/login", (req, res) => {
@@ -29,10 +29,8 @@ app.get("/", (req, res) => {
 
 app.post("/signup", addUser);
 
-// POST route for user login
 app.post("/login", loginUser);
 
-// Start the server
 server = app.listen(PORT, function () {
   const address = server.address();
   const baseUrl = `http://${
