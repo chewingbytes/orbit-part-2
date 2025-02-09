@@ -11,7 +11,7 @@ data:
     scrape_configs:
       - job_name: 'rms-app'
         static_configs:
-          - targets: ['rms-service:5050']
+          - targets: ['rms-service:80']
 ---
 apiVersion: apps/v1
 kind: Deployment
